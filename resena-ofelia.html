@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ofelia — Déjanos tu opinión</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600;1,700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#0f3d34;
+    --pink:#e39aa5;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    min-height:100vh;
+    background:var(--green);
+    color:var(--pink);
+    font-family:'Poppins',sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:32px 24px;
+  }
+  h1{
+    font-family:'Playfair Display',serif;
+    font-style:italic;
+    font-weight:700;
+    font-size:clamp(48px,14vw,80px);
+    margin:0 0 8px;
+  }
+  p{
+    font-size:15px;
+    opacity:.85;
+    margin:0 0 36px;
+    max-width:280px;
+  }
+  button{
+    font-family:'Poppins',sans-serif;
+    font-size:16px;
+    font-weight:500;
+    color:var(--green);
+    background:var(--pink);
+    border:none;
+    border-radius:999px;
+    padding:16px 32px;
+    cursor:pointer;
+  }
+  button:active{opacity:.85}
+  .status{
+    margin-top:18px;
+    font-size:13px;
+    opacity:.7;
+    min-height:16px;
+  }
+</style>
+</head>
+<body>
+  <h1>Ofelia</h1>
+  <p>Gracias por visitarnos. Cuéntanos cómo fue tu experiencia.</p>
+  <button id="btn">Dejar mi opinión ⭐</button>
+  <div class="status" id="status"></div>
+
+<script>
+  // Enlace de reseña de Casona Ofelia
+  const GOOGLE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=ChIJrXnGquC3BZER0YTFWntGkyQ";
+
+  // Opcional: si la plaquita agrega ?m=Carlos, se registra ese nombre
+  const params = new URLSearchParams(window.location.search);
+  const mesero = params.get('m') || 'general';
+
+  document.getElementById('btn').addEventListener('click', async function () {
+    document.getElementById('status').textContent = 'Abriendo Google...';
+    try {
+      const db = await claude.use('db');
+      if (db) {
+        await db.collection('resenas').add({ mesero: mesero, fecha: new Date().toISOString() });
+      }
+    } catch (e) {}
+    window.location.href = GOOGLE_REVIEW_URL;
+  });
+</script>
+</body>
+</html>
